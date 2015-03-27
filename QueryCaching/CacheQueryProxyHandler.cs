@@ -1,6 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.IO;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace QueryCaching
@@ -18,17 +16,23 @@ namespace QueryCaching
 
         public TResult Handle(TQuery query)
         {
-            var key = GenerateKey(query);
-
-            TResult result;
-            if (Cache.TryGetValue(key, out result))
+            QueryCacheConfigurationItem configuration;
+            if (QueryCacheConfiguration.QueryCacheConfigurationItems.TryGetValue(typeof (TQuery), out configuration))
             {
+                var key = GenerateKey(query);
+
+                TResult result;
+                if (Cache.TryGetValue(key, out result))
+                {
+                    return result;
+                }
+
+                result = _next.Handle(query);
+                Cache[key] = result;
                 return result;
             }
 
-            result = _next.Handle(query);
-            Cache[key] = result;
-            return result;
+            return _next.Handle(query);
         }
 
         private static string GenerateKey(TQuery query)

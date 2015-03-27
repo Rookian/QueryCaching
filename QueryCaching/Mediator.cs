@@ -1,4 +1,5 @@
-﻿using SimpleInjector;
+﻿using System;
+using SimpleInjector;
 
 namespace QueryCaching
 {
@@ -20,6 +21,13 @@ namespace QueryCaching
 
         public void Send(object command)
         {
+        }
+
+        public void ConfigureQueryCache(Action<QueryConfigurationExpression> queryConfigurationExpression)
+        {
+            var configurationExpression = new QueryConfigurationExpression();
+            queryConfigurationExpression(configurationExpression);
+
         }
     }
 }

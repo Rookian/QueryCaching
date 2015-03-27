@@ -13,6 +13,10 @@ namespace QueryCaching
             container.RegisterDecorator(typeof(IQueryHandler<,>), typeof(CacheQueryProxyHandler<,>));
 
             var mediator = container.GetInstance<IMediator>();
+            mediator.ConfigureQueryCache(x =>
+            {
+                x.CacheQuery<PersonQuery>();
+            });
 
             var person = mediator.Request(new PersonQuery {Id = 1});
             var person1 = mediator.Request(new PersonQuery { Id = 1 }); 
