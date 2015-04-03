@@ -9,18 +9,19 @@ namespace QueryCaching
         {
             var container = new Container();
             container.Register<IMediator, Mediator>();
-            container.RegisterManyForOpenGeneric(typeof (IQueryHandler<,>), typeof (IQueryHandler<,>).Assembly);
+            container.RegisterManyForOpenGeneric(typeof(IQueryHandler<,>), typeof(IQueryHandler<,>).Assembly);
             container.RegisterDecorator(typeof(IQueryHandler<,>), typeof(CacheQueryProxyHandler<,>));
 
             var mediator = container.GetInstance<IMediator>();
-            mediator.ConfigureQueryCache(x =>
+            mediator.ConfigureQueryCache(configure =>
             {
-                x.CacheQuery<PersonQuery>();
+                configure.Cache<PersonQuery>();
             });
 
-            var person = mediator.Request(new PersonQuery {Id = 1});
-            var person1 = mediator.Request(new PersonQuery { Id = 1 }); 
-            
+
+            var person = mediator.Request(new PersonQuery { Id = 1 });
+            var person1 = mediator.Request(new PersonQuery { Id = 1 });
+
             var person2 = mediator.Request(new PersonQuery { Id = 5 });
 
         }

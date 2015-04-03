@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-
-namespace QueryCaching
+﻿namespace QueryCaching
 {
 
     public class QueryConfigurationExpression
@@ -13,29 +10,15 @@ namespace QueryCaching
             QueryCacheConfiguration = new QueryCacheConfiguration();
         }
 
-        public void CacheQuery<TQuery>()
+        
+        public void Cache<TQuery>()
         {
-            QueryCacheConfiguration.QueryCacheConfigurationItems[typeof(TQuery)] =
-            new QueryCacheConfigurationItem
+            var item = new QueryCacheConfigurationItem
             {
                 QueryType = typeof(TQuery)
             };
+
+            QueryCacheConfiguration.QueryCacheConfigurationItems[typeof(TQuery)] = item;
         }
-    }
-
-    public class QueryCacheConfiguration
-    {
-        public static ConcurrentDictionary<Type, QueryCacheConfigurationItem> QueryCacheConfigurationItems { get; set; }
-
-        public QueryCacheConfiguration()
-        {
-            QueryCacheConfigurationItems = new ConcurrentDictionary<Type, QueryCacheConfigurationItem>();
-        }
-    }
-
-    public class QueryCacheConfigurationItem
-    {
-        public Type QueryType { get; set; }
-        public DateTime AbsolutExpiration { get; set; }
     }
 }
