@@ -1,13 +1,14 @@
 ﻿using System;
+using Ninject;
 using SimpleInjector;
 
 namespace QueryCaching
 {
     public class Mediator : IMediator
     {
-        private readonly Container _container;
+        private readonly IKernel _container;
 
-        public Mediator(Container container)
+        public Mediator(IKernel container)
         {
             _container = container;
         }
@@ -15,7 +16,7 @@ namespace QueryCaching
         public TResponse Request<TResponse>(IQuery<TResponse> query)
         {
             var makeGenericType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
-            dynamic queryHandler = _container.GetInstance(makeGenericType);
+            dynamic queryHandler = _container.Get(makeGenericType);
             return queryHandler.Handle((dynamic)query);
         }
 
