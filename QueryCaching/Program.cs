@@ -1,7 +1,5 @@
 ﻿using Ninject;
-using SimpleInjector;
-using SimpleInjector.Extensions;
-using Ninject.Extensions.Conventions;
+
 namespace QueryCaching
 {
     class Program
@@ -15,12 +13,19 @@ namespace QueryCaching
 
             var container = new StandardKernel();
             container.Bind<IMediator>().To<Mediator>();
-            container.Bind(
-                x =>
-                    x.FromThisAssembly()
-                        .SelectAllClasses()
-                        .InheritedFrom(typeof (IQueryHandler<,>))
-                        .BindSingleInterface());
+            //container.Bind(
+            //    x =>
+            //        x.FromThisAssembly()
+            //            .SelectAllClasses()
+            //            .InheritedFrom(typeof(IQueryHandler<,>))
+            //            .BindSingleInterface());
+
+            container.Bind(typeof(IQueryHandler<PersonQuery, Person>))
+                .To(typeof(PersonQueryHandler))
+                .WhenInjectedInto(typeof (CacheQueryProxyHandler<,>));
+            
+            container.Bind(typeof(IQueryHandler<,>)).To(typeof(CacheQueryProxyHandler<,>));
+
 
             var handler = new CacheQueryProxyHandler<PersonQuery, Person>(new PersonQueryHandler());
 
