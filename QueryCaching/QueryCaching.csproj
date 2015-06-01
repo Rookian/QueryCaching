@@ -55,6 +55,7 @@
     <Compile Include="IMediator.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="IQueryHandler.cs" />
+    <Compile Include="LoggingQueryProxyHandler.cs" />
     <Compile Include="Mediator.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="PersonQueryHandler.cs" />

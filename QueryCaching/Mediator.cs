@@ -1,6 +1,5 @@
 ﻿using System;
 using Ninject;
-using SimpleInjector;
 
 namespace QueryCaching
 {
